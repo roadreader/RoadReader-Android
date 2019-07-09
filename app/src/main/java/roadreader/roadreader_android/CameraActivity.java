@@ -17,9 +17,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.LinearInterpolator;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,6 +56,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     private boolean isRecording = false;
     private static final String TAG = "Recorder";
     private Button captureButton;
+    protected ImageView redDot;
+    protected Animation redDotAnimation;
     private boolean canRecord = false;
     FirebaseUser user;
 
@@ -74,6 +80,9 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         mPreview = (TextureView) findViewById(R.id.textureView);
         captureButton = (Button) findViewById(R.id.button_capture);
         layout = (FrameLayout) findViewById(R.id.camera_preview);
+        redDot = findViewById(R.id.redDot);
+
+        redDot.setVisibility(View.INVISIBLE);
 
         if (areCameraPermissionGranted()) {
             initCamera();
@@ -123,11 +132,26 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         }
     }
 
+    private void startRedDotAnimation() {
+        redDot.setVisibility(View.VISIBLE);
+        redDotAnimation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
+        redDotAnimation.setDuration(1000); // duration - half a second
+        redDotAnimation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+        redDotAnimation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+        redDotAnimation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
+        redDot.startAnimation(redDotAnimation);
+    }
+
+    private void cancelRedDotAnimation() {
+        redDotAnimation.cancel();
+        redDot.setVisibility(View.INVISIBLE);
+    }
+
     private void startCapture() {
 
-        if(isRecording)
-            Log.d("camera", "isrecording");
         if (isRecording) {
+            cancelRedDotAnimation();
+            Log.d("camera", "isrecording");
             // BEGIN_INCLUDE(stop_release_media_recorder)
 
             // stop recording and release camera
@@ -191,6 +215,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             //transition to listView
             startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
+
+            startRedDotAnimation();
 
             timeStamp = String.valueOf((System.currentTimeMillis() / 1000L));
             setCaptureButtonText("Stop");

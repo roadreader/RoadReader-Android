@@ -36,11 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="30dp"
         android:alpha="0.8"
         android:background="@drawable/rounded_button"
-        android:text="Capture"
         android:onClick="onCaptureClick"
+        android:text="Capture"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,16 +49,15 @@
     <ImageView
         android:id="@+id/redDot"
         android:layout_width="20dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginTop="221dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="288dp"
+        android:layout_marginBottom="25dp"
         android:contentDescription="red video dot"
         app:layout_constraintBottom_toTopOf="@+id/button_capture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/red_dot_round" />
-
 
 
 </android.support.constraint.ConstraintLayout>

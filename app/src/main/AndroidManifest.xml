@@ -16,7 +16,8 @@
         android:label="RoadReader"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelectionActivity"></activity>
+        <activity android:name=".SelectionActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".SensorActivity"
             android:label="@string/title_activity_sensor"

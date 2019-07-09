@@ -35,6 +35,13 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
     private OutputStream outputStream;
     FirebaseUser user;
 
+    private final String[] requiredPermissions = {
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.RECORD_AUDIO,
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

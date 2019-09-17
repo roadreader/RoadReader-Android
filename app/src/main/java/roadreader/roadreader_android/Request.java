@@ -2,6 +2,8 @@ package roadreader.roadreader_android;
 
 import android.content.Context;
 import android.hardware.Sensor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -38,6 +40,8 @@ public class Request {
     String tripId;
     String path;
     SensorActivity display;
+    ConnectivityManager connManager;
+    NetworkInfo mWifi;
 
     public Request(SensorActivity d) {
         display = d;
@@ -45,6 +49,18 @@ public class Request {
 
     public Request() {
 
+    }
+
+    public Request(Context context,SensorActivity d) {
+        display = d;
+
+        connManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    }
+
+    public Request(Context context) {
+        connManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     }
 
     public String sendGET(String s) throws IOException {
@@ -150,5 +166,13 @@ public class Request {
             }
         });
 
+    }
+
+    private boolean wifiConnected() {
+        if (mWifi.isConnected()) {
+            return true;
+        }
+        Log.d("connection", "not connected to wifi");
+        return false;
     }
 }

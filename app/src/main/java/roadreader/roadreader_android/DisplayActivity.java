@@ -81,9 +81,8 @@ public class DisplayActivity extends AppCompatActivity {
     private void upload() throws FileNotFoundException {
         String tripName = getTimestamp(video.getName());
         File tripFile = new File(getFilesDir(), "Trips/" + tripName + ".json");
-        //Request request = new Request(this);
-        //request.sendTrip(tripFile, video.getAbsolutePath());
-        //request.sendVideo(video.getAbsolutePath(), ref);
+        Request request = new Request(this);
+        request.sendTripWithVideo(tripFile, video.getAbsolutePath());
     }
 
     public void delete(Boolean isSent) {

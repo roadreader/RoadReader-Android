@@ -2,8 +2,6 @@ package roadreader.roadreader_android;
 
 import android.content.Context;
 import android.hardware.Sensor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -39,28 +37,14 @@ public class Request {
     private static final String USER_AGENT = "Mozilla/5.0";
     String tripId;
     String path;
-    SensorActivity display;
-    ConnectivityManager connManager;
-    NetworkInfo mWifi;
+    Context display;
 
-    public Request(SensorActivity d) {
+    public Request(Context d) {
         display = d;
     }
 
     public Request() {
 
-    }
-
-    public Request(Context context,SensorActivity d) {
-        display = d;
-
-        connManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-    }
-
-    public Request(Context context) {
-        connManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
     }
 
     public String sendGET(String s) throws IOException {
@@ -103,9 +87,7 @@ public class Request {
         return "";
     }
 
-    public String sendTrip (File file, final Context c)
-            throws FileNotFoundException {
-        //path = filePath; //get filepath of the trip's corresponding video
+    public void sendTrip (File file) throws FileNotFoundException {
 
         //read trip.json file and convert it to trip class
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -115,27 +97,53 @@ public class Request {
         Log.d("database", "User ID: " + trip.getUserId());
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         db.collection("trips").add(trip)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("database", "DocumentSnapshot written with ID: " + documentReference.getId());
-                //trip.setTripId(documentReference.getId());
-                tripId = documentReference.getId();
-                Log.d("database", "tripId: " + tripId);
-                Toast.makeText(c,tripId,Toast.LENGTH_SHORT).show();
-                //sendVideo(path, trip.getUserId() + "/" + tripId); //send video if trip uploaded
-            }
-        })
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("database", "DocumentSnapshot written with ID: " + documentReference.getId());
+                        tripId = documentReference.getId();
+                        Log.d("database", "tripId: " + tripId);
+                        Toast.makeText(display,tripId,Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w("database", "Error adding document", e);
                     }
                 });
+    }
 
-        //Log.d("database", "tripId: " + tripId);
-        return trip.getUserId() + "/" + tripId;
+    public void sendTripWithVideo (File file, final String videoPath) throws FileNotFoundException {
+
+        //read trip.json file and convert it to trip class
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        final Trip trip =  new Gson().fromJson(br, Trip.class);
+        List<GPSPoint> pts = trip.getGpsPoints();
+
+        Log.d("database", "User ID: " + trip.getUserId());
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("trips").add(trip)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("database", "DocumentSnapshot written with ID: " + documentReference.getId());
+                        tripId = documentReference.getId();
+                        Log.d("database", "tripId: " + tripId);
+                        Toast.makeText(display,tripId,Toast.LENGTH_SHORT).show();
+                        sendVideo(videoPath, trip.getUserId() + "/" + tripId); //send video if trip uploaded
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("database", "Error adding document", e);
+                    }
+                });
     }
 
     public void sendVideo(String filePath, String ref) {
@@ -166,13 +174,5 @@ public class Request {
             }
         });
 
-    }
-
-    private boolean wifiConnected() {
-        if (mWifi.isConnected()) {
-            return true;
-        }
-        Log.d("connection", "not connected to wifi");
-        return false;
     }
 }

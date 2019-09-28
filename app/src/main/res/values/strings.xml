@@ -4,4 +4,11 @@
     <string name="need_camera_permissions">This app needs the WRITE_EXTERNAL_STORAGE, RECORD_AUDIO
         and CAMERA permissions to capture video from the camera.</string>
     <string name="title_activity_sensor">SensorActivity</string>
+
+    <string name="progress_uploading">Uploading…</string>
+    <string name="progress_auth">Signing In…</string>
+
+    <string name="upload_success">Upload finished</string>
+    <string name="upload_failure">Upload failed</string>
+
 </resources>

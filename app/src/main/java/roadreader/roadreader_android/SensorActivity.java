@@ -164,7 +164,7 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
             @Override
             public void run() {
                 try {
-                    request.sendTrip(tripFile, SensorActivity.this);
+                    request.sendTrip(tripFile);
                 }catch(IOException e) {
                     e.printStackTrace();
                 }

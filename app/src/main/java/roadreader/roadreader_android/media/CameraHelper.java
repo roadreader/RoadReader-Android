@@ -213,8 +213,7 @@ public class CameraHelper {
                 return null;
             }
 
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), "RoadReader");
+            File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "RoadReader");
             // This location works best if you want the created images to be shared
             // between applications and persist after your app has been uninstalled.
 

@@ -463,6 +463,11 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(this, ListActivity.class);
+        startActivity(myIntent);
+    }
 }
 
 

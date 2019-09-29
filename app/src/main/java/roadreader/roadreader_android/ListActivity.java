@@ -43,4 +43,10 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(this, CameraActivity.class);
+        startActivity(myIntent);
+    }
 }

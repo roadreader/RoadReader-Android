@@ -265,4 +265,10 @@ public class DisplayActivity extends AppCompatActivity {
         videoName = videoName.substring(startIndex,endIndex);
         return videoName;
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(this, ListActivity.class);
+        startActivity(myIntent);
+    }
 }

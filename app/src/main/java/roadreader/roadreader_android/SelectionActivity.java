@@ -40,7 +40,7 @@ public class SelectionActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        Intent myIntent = new Intent(this, ListActivity.class);
+        Intent myIntent = new Intent(this, SelectionActivity.class);
         startActivity(myIntent);
     }
 }

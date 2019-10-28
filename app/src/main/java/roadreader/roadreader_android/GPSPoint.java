@@ -52,36 +52,5 @@ class GPSPoint {
         return lng;
     }
 
-    /**
-     * Uses lat and lng to get the gps coordinate's corresponding square
-     * through a get request to what3words
-     * @return The name of the Square that the gps coordinates fall under
-     */
-    /*
-    protected String getSquare() throws IOException {
-        String req = "https://api.what3words.com/v3/convert-to-3wa?coordinates=" +
-                lat +
-                "%2C" +
-                lng +
-                "&key=" +
-                API_KEY;
-        Request request = new Request();
-        String response_string = request.sendGET(req);
 
-        if(response_string.isEmpty())
-            return "failed";
-
-        Map<String, Object> jsonMap;
-        Gson gson = new Gson();
-        Type outputType = new TypeToken<Map<String, Object>>(){}.getType();
-        jsonMap = gson.fromJson(response_string, outputType);
-
-        Log.d("GPS", jsonMap.toString());
-        System.out.println(jsonMap.toString());
-
-        String square_name = jsonMap.get("words").toString();
-
-        return square_name;
-    }
-    */
 }

@@ -62,31 +62,4 @@ public class Trip implements Cloneable{
 
 
 
-    /*
-    public void processGPSPoint() throws IOException {
-
-        GPSPoint gps = gpsQueue.poll();
-
-        String square_name = gps.getSquare();
-        Boolean square_exists = false;
-        int index;
-        if (!squareList.isEmpty()) {
-            for (int i = 0; i < squareList.size(); i++) {
-                if(squareList.get(i).getName().equals(square_name)) {
-                    square_exists = true;
-                    Square square = squareList.get(i);
-                    square.addGPSPoint(gps);
-                    Log.d("trip", "Adding to square: " + square_name);
-                    break;
-                }
-            }
-        }
-        if(!square_exists) {
-            Square square = new Square(gps, square_name);
-            squareList.add(square);
-            Log.d("trip", "Creating new square: " + square_name);
-        }
-    }
-    */
-
 }

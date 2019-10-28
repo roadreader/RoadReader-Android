@@ -47,6 +47,12 @@ public class Request {
 
     }
 
+    /**
+     * Sends a GET request to specified URL
+     * @param s The URL that the request is sent to
+     * @return The response of the request. Returns an empty string if request fails
+     * @throws IOException
+     */
     public String sendGET(String s) throws IOException {
         URL url = new URL(s);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -116,6 +122,13 @@ public class Request {
                 });
     }
 
+    /**
+     * Sends Trip file to firebase. On success, calls the sendVideo method to upload the
+     * corresponding video.
+     * @param file The Trip file to be uploaded
+     * @param videoPath Absolute path of video corresponding to the Trip file
+     * @throws FileNotFoundException If Trip file cannot be found
+     */
     public void sendTripWithVideo (File file, final String videoPath) throws FileNotFoundException {
 
         //read trip.json file and convert it to trip class
@@ -146,7 +159,13 @@ public class Request {
                 });
     }
 
-    public void sendVideo(String filePath, String ref) {
+    /**
+     * Sends the video corresponding to the trip file that was uploaded
+     * @param filePath Absolute path of video file
+     * @param ref Determines path that the video will be stored on Firebase.
+     *            Path is "[userId]/[tripId]"
+     */
+    private void sendVideo(String filePath, String ref) {
 
         Uri file = Uri.fromFile(new File(filePath));
 

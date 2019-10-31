@@ -12,10 +12,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.MutableFloat;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -31,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.util.List;
 
 public class DisplayActivity extends AppCompatActivity {
@@ -43,6 +46,8 @@ public class DisplayActivity extends AppCompatActivity {
 
     private BroadcastReceiver mBroadcastReceiver;
     private ProgressDialog mProgressDialog;
+    private ProgressBar progressBar;
+    private TextView textView;
 
     private static final String KEY_FILE_URI = "key_file_uri";
     private static final String TAG = "DisplayActivity";
@@ -91,7 +96,6 @@ public class DisplayActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "onReceive:" + intent);
-                hideProgressDialog();
 
                 switch (intent.getAction()) {
                     case MyUploadService.UPLOAD_COMPLETED:
@@ -100,6 +104,10 @@ public class DisplayActivity extends AppCompatActivity {
                     case MyUploadService.UPLOAD_ERROR:
                         onUploadResultIntent(intent,"Error");
                         break;
+                    case MyUploadService.UPDATE_PROGRESS:
+                        onUpdateProgressIntent(intent);
+                        break;
+
                 }
             }
         };
@@ -182,6 +190,13 @@ public class DisplayActivity extends AppCompatActivity {
         // Save the File URI
         mFileUri = fileUri;
 
+        //create progress bar and text
+        progressBar = (ProgressBar) findViewById(R.id.pBar);
+        progressBar.setVisibility(View.VISIBLE);
+        textView = (TextView) findViewById(R.id.tView);
+        textView.setVisibility(View.VISIBLE);
+
+
         // Start MyUploadService to upload the file, so that the file is uploaded
         // even if this Activity is killed or put in the background
         startService(new Intent(this, MyUploadService.class)
@@ -197,7 +212,16 @@ public class DisplayActivity extends AppCompatActivity {
         // Got a new intent from MyUploadService with a success or failure
         mFileUri = intent.getParcelableExtra(MyUploadService.EXTRA_FILE_URI);
         hideProgressDialog();
+        progressBar.setVisibility(View.INVISIBLE);
+        textView.setVisibility(View.INVISIBLE);
         showMessageDialog(message, mFileUri.toString());
+    }
+
+    private void onUpdateProgressIntent(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        int progress = (int)bundle.getFloat(MyUploadService.EXTRA_PROGRESS);
+        progressBar.setProgress(progress);
+        textView.setText(progress + "%");
     }
 
     private void showMessageDialog(String title, String message) {

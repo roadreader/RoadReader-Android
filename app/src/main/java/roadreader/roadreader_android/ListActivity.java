@@ -11,11 +11,14 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import roadreader.roadreader_android.media.LogFiler;
+
 public class ListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private Button recordBtn;
+    private LogFiler logFiler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,7 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        logFiler = new LogFiler("ListActivity");
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);

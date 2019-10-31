@@ -36,13 +36,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
 
 import roadreader.roadreader_android.media.CameraHelper;
 import roadreader.roadreader_android.media.CameraPreview;
+import roadreader.roadreader_android.media.LogFiler;
 
 public class CameraActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int MEDIA_RECORDER_REQUEST = 0;
+
 
     private Camera mCamera;
     private Camera.CameraInfo mCameraInfo;
@@ -53,6 +56,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     private MediaRecorder mMediaRecorder;
     private File mOutputFile;
     private OutputStream outputStream;
+    private LogFiler logFiler;
 
     private boolean isRecording = false;
     private static final String TAG = "Recorder";
@@ -80,7 +84,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        logFiler = new LogFiler("Camera Activity", Level.INFO);
 
         mPreview = (TextureView) findViewById(R.id.textureView);
         captureButton = (Button) findViewById(R.id.button_capture);
@@ -157,6 +161,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         if (isRecording) {
             cancelRedDotAnimation();
             Log.d("camera", "isrecording");
+            logFiler.log("isrecording");
             // BEGIN_INCLUDE(stop_release_media_recorder)
 
             // stop recording and release camera

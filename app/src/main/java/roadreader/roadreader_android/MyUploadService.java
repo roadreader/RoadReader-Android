@@ -10,6 +10,7 @@ import android.util.Log;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,13 +23,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.Serializable;
 
 import roadreader.roadreader_android.R;
 
 /**
  * Service to handle uploading files to Firebase Storage.
  */
-public class MyUploadService extends MyBaseTaskService {
+public class MyUploadService extends MyBaseTaskService implements Serializable {
 
     private static final String TAG = "MyUploadService";
 
@@ -36,15 +38,18 @@ public class MyUploadService extends MyBaseTaskService {
     public static final String ACTION_UPLOAD = "action_upload";
     public static final String UPLOAD_COMPLETED = "upload_completed";
     public static final String UPLOAD_ERROR = "upload_error";
+    public static final String UPDATE_PROGRESS = "update progress";
 
     /** Intent Extras **/
     public static final String EXTRA_FILE_URI = "extra_file_uri";
     public static final String EXTRA_DOWNLOAD_URL = "extra_download_url";
     public static final String EXTRA_FILE_PATH = "extra_file_path";
+    public static final String EXTRA_PROGRESS = "extra_progress";
 
     // [START declare_ref]
     private StorageReference mStorageRef;
     // [END declare_ref]
+
 
     @Override
     public void onCreate() {
@@ -107,6 +112,13 @@ public class MyUploadService extends MyBaseTaskService {
                         showProgressNotification(getString(R.string.progress_uploading),
                                 taskSnapshot.getBytesTransferred(),
                                 taskSnapshot.getTotalByteCount());
+
+                        float progress = (float)(100.0 * taskSnapshot.getBytesTransferred())
+                                / taskSnapshot.getTotalByteCount();
+
+                        broadcastUpdate(progress);
+
+
                     }
                 })
                 .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -169,6 +181,19 @@ public class MyUploadService extends MyBaseTaskService {
     }
 
     /**
+     * Broadcast upload progress.
+     * @return true if a running receiver received the broadcast.
+     */
+    private boolean broadcastUpdate(float progress) {
+        String action = UPDATE_PROGRESS;
+        Intent broadcast = new Intent(action)
+                .putExtra(EXTRA_PROGRESS, progress);
+
+        return LocalBroadcastManager.getInstance(getApplicationContext())
+                .sendBroadcast(broadcast);
+    }
+
+    /**
      * Show a notification for a finished upload.
      */
     private void showUploadFinishedNotification(@Nullable Uri downloadUrl, @Nullable Uri fileUri) {
@@ -190,6 +215,7 @@ public class MyUploadService extends MyBaseTaskService {
         IntentFilter filter = new IntentFilter();
         filter.addAction(UPLOAD_COMPLETED);
         filter.addAction(UPLOAD_ERROR);
+        filter.addAction(UPDATE_PROGRESS);
 
         return filter;
     }

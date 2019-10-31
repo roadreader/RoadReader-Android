@@ -280,10 +280,16 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     protected void onPause() {
         super.onPause();
         logFiler.info("pause called");
+
+        if(isRecording) {
+            startCapture();
+        }
+        /*
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
         releaseCamera();
+        */
         layout.removeAllViews();
     }
 

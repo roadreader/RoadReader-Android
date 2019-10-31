@@ -73,7 +73,7 @@ public class LogFiler {
      * Logs a string to log file
      * @param level logging level of message
      * @param s String to be written to log file
-     * @return
+     * @return Returns true if logging to file was successful, false otherwise.
      */
     public boolean log (Level level, String s) {
 
@@ -160,7 +160,7 @@ public class LogFiler {
     /**
      * Writes a log of level INFO.
      * @param s String to be logged.
-     * @return
+     * @return Returns true if logging to file was successful, false otherwise.
      */
     public boolean info(String s) {
         return log(Level.INFO, s);
@@ -169,7 +169,7 @@ public class LogFiler {
     /**
      * Writes a log of level WARNING.
      * @param s String to be logged.
-     * @return
+     * @return Returns true if logging to file was successful, false otherwise.
      */
     public boolean warning(String s) {
         return log(Level.WARNING, s);
@@ -178,7 +178,7 @@ public class LogFiler {
     /**
      * Writes a log of level SEVERE.
      * @param s String to be logged.
-     * @return
+     * @return Returns true if logging to file was successful, false otherwise.
      */
     public boolean severe(String s) {
         return log(Level.SEVERE, s);

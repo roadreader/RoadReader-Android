@@ -170,31 +170,6 @@ public class SensorActivity extends AppCompatActivity implements SendSensorData,
                 }
             }
         });
-
-
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //upload
-                File tripFile = new File(getFilesDir(), "Trips/" + timeStamp + ".json");
-                Request request = new Request(SensorActivity.this);
-
-                try{
-                    final String id = request.sendTrip(tripFile);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(SensorActivity.this,id,Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }catch(IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        */
-
     }
 
     @Override

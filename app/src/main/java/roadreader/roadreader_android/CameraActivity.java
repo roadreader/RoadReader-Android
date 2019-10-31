@@ -135,6 +135,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     public void onCaptureClick(View view) {
 
         if (areCameraPermissionGranted()) {
+            logFiler.info("record button pressed");
             Log.d("camera","record button pressed");
             startCapture();
         } else {
@@ -161,6 +162,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
 
         if (isRecording) {
             cancelRedDotAnimation();
+            logFiler.info("started recording");
             Log.d("camera", "isrecording");
             logFiler.log("isrecording");
             // BEGIN_INCLUDE(stop_release_media_recorder)
@@ -171,6 +173,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             } catch (RuntimeException e) {
                 // RuntimeException is thrown when stop() is called immediately after start().
                 // In this case the output file is not properly constructed ans should be deleted.
+                logFiler.warning("RuntimeException: stop() is called immediately after start()");
                 Log.d(TAG, "RuntimeException: stop() is called immediately after start()");
                 //noinspection ResultOfMethodCallIgnored
                 //mOutputFile.delete();
@@ -183,6 +186,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
                 e.printStackTrace();
                 trip = gps.getTrip();
                 Log.d("RoadReader", "failed to clone trip");
+                logFiler.warning("failed to clone trip");
             }
 
             gps.stop();
@@ -196,6 +200,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             // Create the storage directory if it does not exist
             if (!tripInternalDir.exists()) {
                 if (!tripInternalDir.mkdirs()) {
+                    logFiler.warning("failed to create directory");
                     Log.d("RoadReader", "failed to create directory");
                 }
             }
@@ -212,6 +217,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
                 Log.d("trip", gson.toJson(trip));
             } catch (IOException e) {
                 e.printStackTrace();
+                logFiler.severe("failed to write trip to file");
                 Log.d("trip", "failed to write trip to file");
             }
 
@@ -223,6 +229,7 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             setCaptureButtonText("Capture");
             isRecording = false;
             releaseCamera();
+            logFiler.info("stopped recording");
             //transition to listView
             startActivity(new Intent(CameraActivity.this,ListActivity.class));
         } else {
@@ -272,15 +279,17 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
     @Override
     protected void onPause() {
         super.onPause();
-        layout.removeAllViews();
+        logFiler.info("pause called");
         // if we are using MediaRecorder, release it first
         releaseMediaRecorder();
         // release the camera immediately on pause event
         releaseCamera();
+        layout.removeAllViews();
     }
 
     @Override
     protected void onStop() {
+        logFiler.info("stop called");
         super.onStop();
         if(gps != null)
             gps.stop();
@@ -343,7 +352,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
             // with {@link SurfaceView}
             mCamera.setPreviewTexture(mPreview.getSurfaceTexture());
         } catch (IOException e) {
-            Log.e(TAG, "Surface texture is unavailable or unsuitable" + e.getMessage());
+            logFiler.severe("Surface texture is unavailable or unsuitable\n"+ e.getMessage());
+            Log.e(TAG, "Surface texture is unavailable or unsuitable\n" + e.getMessage());
             return false;
         }
         // END_INCLUDE (configure_preview)

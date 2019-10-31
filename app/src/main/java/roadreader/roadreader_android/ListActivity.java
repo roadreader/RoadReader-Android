@@ -26,6 +26,7 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
         //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         logFiler = new LogFiler("ListActivity");
 
 

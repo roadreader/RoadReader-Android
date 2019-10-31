@@ -84,7 +84,8 @@ public class CameraActivity extends AppCompatActivity implements ActivityCompat.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        logFiler = new LogFiler("Camera Activity", Level.INFO);
+
+        logFiler = new LogFiler(Level.INFO, "Camera Activity");
 
         mPreview = (TextureView) findViewById(R.id.textureView);
         captureButton = (Button) findViewById(R.id.button_capture);

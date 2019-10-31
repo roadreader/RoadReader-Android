@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class LogFiler {
 
@@ -50,13 +51,13 @@ public class LogFiler {
 
     /**
      * Initializes logger. Creates or finds the log file and writes to it.
-     * @param str the String to be written to the log file.
      * @param level the log level to be assigned to the string.
+     * @param str the String to be written to the log file.
      */
-    public LogFiler(String str, Level level) {
+    public LogFiler(Level level, String str) {
         logger = Logger.getLogger(LOGGER_NAME);
         createLogFile(SAVE_DIRECTORY);
-        log(str, level);
+        log(level, str);
     }
 
     /**
@@ -65,22 +66,27 @@ public class LogFiler {
      * @return Returns true if logging to file was successful, false otherwise.
      */
     public boolean log (String s) {
-        return log(s, Level.INFO);
+        return log(Level.INFO, s);
     }
 
     /**
      * Logs a string to log file
-     * @param s String to be written to log file
      * @param level logging level of message
+     * @param s String to be written to log file
      * @return
      */
-    public boolean log (String s, Level level) {
+    public boolean log (Level level, String s) {
 
         FileHandler fh;
         try {
+            //create filehandler and formatter for logging
             Log.d("logfile", "Writing to log.txt...");
             fh = new FileHandler(logFile.getAbsolutePath(), true);
             logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+
+            //log string to file
             logger.log(level, s);
             Log.d("logfile", "Success");
             fh.close();
@@ -148,6 +154,34 @@ public class LogFiler {
         Log.d("logfiler", "log file at:\n" + logFile.getAbsolutePath());
 
 
+    }
+
+
+    /**
+     * Writes a log of level INFO.
+     * @param s String to be logged.
+     * @return
+     */
+    public boolean info(String s) {
+        return log(Level.INFO, s);
+    }
+
+    /**
+     * Writes a log of level WARNING.
+     * @param s String to be logged.
+     * @return
+     */
+    public boolean warning(String s) {
+        return log(Level.WARNING, s);
+    }
+
+    /**
+     * Writes a log of level SEVERE.
+     * @param s String to be logged.
+     * @return
+     */
+    public boolean severe(String s) {
+        return log(Level.SEVERE, s);
     }
 }
 
